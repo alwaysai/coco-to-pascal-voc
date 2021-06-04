@@ -1,3 +1,2 @@
-output/Annotations/*
-output/JPEGImages/*
+/output/**
 *.zip
