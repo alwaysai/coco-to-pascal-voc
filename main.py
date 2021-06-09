@@ -6,8 +6,8 @@ import glob
 from templates import xml_template, object_template
 
 # Edit these
-COCO_DATA_IMAGES = "./coco/<image-folder>"
-COCO_DATA_ANNOTATIONS = "./coco/<annotations-json>.json"
+COCO_DATA_IMAGES = "./coco/valid"
+COCO_DATA_ANNOTATIONS = "./coco/11classes_valid.json"
 OUTPUT_ZIP_NAME = "sample_voc_output"
 
 def prepare_output_dirs():
@@ -51,25 +51,28 @@ def create_pascal_voc_package(data):
                     y_min + height
                 )
 
+        # Modify the image fname to replace excess "." with -
+        split_path = os.path.splitext(image_data["fname"])
+        target_basename = split_path[0].replace(".", "-")
+        og_image_extension = split_path[-1]
+        out_image = target_basename + og_image_extension
+        out_anno = target_basename + ".xml"
 
-        xml_annotation = xml_template.format(
-            image_data["fname"], image_data["w"], image_data["h"], object_str)
+        xml_annotation = xml_template.format(out_image, image_data["w"], image_data["h"], object_str)
 
         # Refines the list after extracting relevant annotations
         annotation_data = [a for i, a in enumerate(annotation_data) if i not in delete_indices]
 
-        image = os.path.join(COCO_DATA_IMAGES, image_data["fname"])
+        image = os.path.join(COCO_DATA_IMAGES, out_image)
         if not os.path.exists(image):
             print("No image for the particular annotation")
             continue 
 
-        with open(os.path.join(
-            "output", OUTPUT_ZIP_NAME, "Annotations", os.path.splitext(image_data["fname"])[0] + ".xml"), "w+") \
-                as f:
+        with open(os.path.join("output", OUTPUT_ZIP_NAME, "Annotations", out_anno), "w+") as f:
             f.write(xml_annotation)
         
         print(f"Successfully converted {os.path.basename(image)}")
-        shutil.copy(image, os.path.join("output", OUTPUT_ZIP_NAME, "JPEGImages", image_data["fname"]))
+        shutil.copy(image, os.path.join("output", OUTPUT_ZIP_NAME, "JPEGImages", out_image))
 
 
 if __name__ == "__main__":
