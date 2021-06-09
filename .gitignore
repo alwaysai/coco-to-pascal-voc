@@ -1,2 +1,4 @@
-/output/**
+/output/*
+!/output/sanity_check
 *.zip
+/__pycache__
