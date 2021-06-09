@@ -1,4 +1,6 @@
 /output/*
-!/output/sanity_check
+/coco/*
+!/coco/.gitkeep
+!/output/sanity_check/.gitkeep
 *.zip
 /__pycache__
