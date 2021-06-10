@@ -53,7 +53,7 @@ def create_pascal_voc_package(data):
 
         # Modify the image fname to replace excess "." with -
         split_path = os.path.splitext(image_data["fname"])
-        target_basename = split_path[0].replace(".", "-")
+        target_basename = split_path[0].replace(".", "-").replace("[", "-").replace("]", "-")
         og_image_extension = split_path[-1]
         out_image = target_basename + og_image_extension
         out_anno = target_basename + ".xml"
@@ -63,7 +63,7 @@ def create_pascal_voc_package(data):
         # Refines the list after extracting relevant annotations
         annotation_data = [a for i, a in enumerate(annotation_data) if i not in delete_indices]
 
-        image = os.path.join(COCO_DATA_IMAGES, out_image)
+        image = os.path.join(COCO_DATA_IMAGES, image_data["fname"])
         if not os.path.exists(image):
             print("No image for the particular annotation")
             continue 
