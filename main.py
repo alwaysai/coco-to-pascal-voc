@@ -2,6 +2,7 @@ import os
 import shutil 
 import json 
 import glob 
+import re 
 
 from templates import xml_template, object_template
 
@@ -53,7 +54,8 @@ def create_pascal_voc_package(data):
 
         # Modify the image fname to replace excess "." with -
         split_path = os.path.splitext(image_data["fname"])
-        target_basename = split_path[0].replace(".", "-").replace("[", "-").replace("]", "-")
+        target_basename = split_path[0]
+        target_basename = re.sub('[^0-9a-zA-Z]+', '_', target_basename)
         og_image_extension = split_path[-1]
         out_image = target_basename + og_image_extension
         out_anno = target_basename + ".xml"
