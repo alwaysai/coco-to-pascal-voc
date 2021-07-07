@@ -1,15 +1,18 @@
-import os 
-import random 
-import glob 
+import os
+import random
+import glob
 import time
 import xml.etree.ElementTree as ET
-
+import shutil
 from PIL import Image, ImageDraw
 
-from main import OUTPUT_ZIP_NAME 
+from main import OUTPUT_ZIP_NAME
 
 ROOT_DIR = os.path.join("output", OUTPUT_ZIP_NAME)
+# ROOT_DIR = "/home/steve/Desktop/HABBOF_Pascal"
 
+shutil.rmtree("./output/sanity_check")
+os.mkdir("./output/sanity_check")
 ann_dir = os.path.join(ROOT_DIR, "Annotations")
 im_dir = os.path.join(ROOT_DIR, "JPEGImages")
 
@@ -32,7 +35,7 @@ if __name__ == "__main__":
 
             tree = ET.parse(os.path.join(ann_dir, annotations[i]))
             objects = tree.findall("object")
-            
+
             for obj in objects:
 
                 bbox = obj.find('bndbox')
@@ -41,7 +44,7 @@ if __name__ == "__main__":
                 xmax = int(float(bbox.find('xmax').text))
                 ymax = int(float(bbox.find('ymax').text))
 
-                draw.rectangle((xmin, ymin, xmax, ymax), 
+                draw.rectangle((xmin, ymin, xmax, ymax),
                     fill=None, outline=(0, 255, 0), width=3)
 
             im.save(f"output/sanity_check/{image_fname}")
